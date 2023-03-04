@@ -27,7 +27,7 @@ const deserialize = async (
 				}				
 			}
 		}
-	} catch (error) {
+	} catch (error: any) {
 		res.locals.session = null;
 	} finally {
 		next();

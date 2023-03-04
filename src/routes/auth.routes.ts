@@ -12,6 +12,6 @@ const router = Router();
 
 router.post('/login', login);
 router.post('/logout', authentication, logout);
-router.get('/session', authentication, session);
+router.get('/session', session);
 
 export default router;

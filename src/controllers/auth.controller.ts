@@ -37,7 +37,9 @@ export const login = async (req: Request, res: Response) => {
 
 		if (
 			user.role !== 'admin' &&
-			!warehouse.allowedUsers.map( user => user.toString()).includes(user._id.toString())
+			!warehouse.allowedUsers
+				.map((user) => user.toString())
+				.includes(user._id.toString())
 		) {
 			return res.status(401).json({ message: 'Invalid credentials' });
 		}
@@ -93,6 +95,7 @@ export const logout = async (req: Request, res: Response) => {
 export const session = async (req: Request, res: Response) => {
 	try {
 		const { session } = res.locals;
+		if (!session) return res.status(204).json({});
 		const user = await findUser({ _id: session.user }, {});
 		if (!user) {
 			return res.status(404).json({ message: 'User not found' });

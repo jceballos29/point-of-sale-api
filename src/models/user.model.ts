@@ -9,6 +9,7 @@ export interface User {
 	username: string;
 	password: string;
 	role: string;
+	avatar?: string;
 }
 
 export interface UserDocument extends User, Document {
@@ -38,6 +39,9 @@ const UserSchema = new Schema<UserDocument>(
 			default: 'user',
 			enum: ['user', 'admin'],
 		},
+		avatar: {
+			type: String,
+		}
 	},
 	{
 		timestamps: true,
