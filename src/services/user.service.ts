@@ -24,11 +24,6 @@ export const update = async (
 	update: Partial<UserDocument>,
 	options: QueryOptions = { lean: true, new: true },
 ) => {
-	console.log({
-		query,
-		update,
-		options
-	})
 	return await UserModel.findOneAndUpdate(query, update, options);
 };
 

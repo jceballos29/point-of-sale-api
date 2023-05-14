@@ -11,6 +11,5 @@ export const generateToken = (payload: any): string => {
 
 export const verifyToken = (token: string): any => {
   const payload = jwt.verify(token, env.jwt.secret!)
-  console.log(payload)
   return payload
 }

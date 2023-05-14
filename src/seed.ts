@@ -2,6 +2,10 @@ import mongoose from 'mongoose';
 import { database } from './config';
 import CategoryModel from './models/category.model';
 import ProductModel from './models/product.model';
+import WarehouseModel from './models/warehouse.model';
+import UserModel from './models/user.model';
+import DeviceModel from './models/device.model';
+import PartyModel from './models/party.model';
 import { logger } from './utils';
 
 database();
@@ -14,10 +18,68 @@ db.once('open', async () => {
 	try {
 		await CategoryModel.deleteMany({});
 		await ProductModel.deleteMany({});
+		await WarehouseModel.deleteMany({});
+		await DeviceModel.deleteMany({});
+		await UserModel.deleteMany({});
+		await PartyModel.deleteMany({});
 
-		logger.info(
-			'Deleted all categories and products from the database',
-		);
+		logger.info('Deleted all warehouses from the database');
+		logger.info('Deleted all products from the database');
+		logger.info('Deleted all categories from the database');
+		logger.info('Deleted all devices from the database');
+		logger.info('Deleted all users from the database');
+		logger.info('Deleted all parties from the database');
+
+		await WarehouseModel.insertMany([
+			{
+				name: 'decanter',
+			},
+			{
+				name: 'billiards',
+			},
+			{
+				name: 'distributor',
+			},
+		]);
+
+		logger.info('Created warehouses in the database');
+
+		const device1 = await DeviceModel.create({
+			name: 'Device 1',
+		});
+
+		const device2 = await DeviceModel.create({
+			name: 'Device 2',
+		});
+
+		logger.info('Created devices in the database');
+
+		const admin = await UserModel.create({
+			name: 'User Admin',
+			email: 'admin@mail.com',
+			password: 'admin123',
+			username: 'admin',
+			role: 'admin',
+			devices: [device1._id, device2._id],
+		});
+
+		const seller = await UserModel.create({
+			name: 'User Seller',
+			email: 'seller@mail.com',
+			password: 'seller123',
+			username: 'seller',
+			role: 'user',
+			devices: [device1._id],
+		});
+
+		logger.info('Created users in the database');
+
+		await PartyModel.insertMany([
+			{ name: 'public'},
+			{ name: 'wholesaler'},
+		])
+
+		logger.info('Created parties in the database');
 
 		const vodka = await CategoryModel.create({ name: 'Vodka' });
 		const tequila = await CategoryModel.create({ name: 'Tequila' });
@@ -36,7 +98,9 @@ db.once('open', async () => {
 		const vodkaProducts = await ProductModel.insertMany([
 			{
 				name: 'Grey Goose Vodka',
-				image: 'https://example.com/grey-goose-vodka.jpg',
+				image: `https://source.unsplash.com/collection/${
+					Math.floor(Math.random() * 10001) + 1
+				}`,
 				code: 'GGVODKA750',
 				list_price: 39.99,
 				quantity: 10,
@@ -44,7 +108,9 @@ db.once('open', async () => {
 			},
 			{
 				name: 'Belvedere Vodka',
-				image: 'https://example.com/belvedere-vodka.jpg',
+				image: `https://source.unsplash.com/collection/${
+					Math.floor(Math.random() * 10001) + 1
+				}`,
 				code: 'BELVODKA750',
 				list_price: 49.99,
 				quantity: 8,
@@ -52,7 +118,9 @@ db.once('open', async () => {
 			},
 			{
 				name: 'Ciroc Vodka',
-				image: 'https://example.com/ciroc-vodka.jpg',
+				image: `https://source.unsplash.com/collection/${
+					Math.floor(Math.random() * 10001) + 1
+				}`,
 				code: 'CIRVODKA750',
 				list_price: 32.99,
 				quantity: 15,
@@ -60,7 +128,9 @@ db.once('open', async () => {
 			},
 			{
 				name: 'Ketel One Vodka',
-				image: 'https://example.com/ketel-one-vodka.jpg',
+				image: `https://source.unsplash.com/collection/${
+					Math.floor(Math.random() * 10001) + 1
+				}`,
 				code: 'KTVODKA750',
 				list_price: 36.99,
 				quantity: 12,
@@ -68,7 +138,9 @@ db.once('open', async () => {
 			},
 			{
 				name: 'Smirnoff Vodka',
-				image: 'https://example.com/smirnoff-vodka.jpg',
+				image: `https://source.unsplash.com/collection/${
+					Math.floor(Math.random() * 10001) + 1
+				}`,
 				code: 'SMIVODKA750',
 				list_price: 19.99,
 				quantity: 20,
@@ -76,7 +148,9 @@ db.once('open', async () => {
 			},
 			{
 				name: 'Skyy Vodka',
-				image: 'https://example.com/skyy-vodka.jpg',
+				image: `https://source.unsplash.com/collection/${
+					Math.floor(Math.random() * 10001) + 1
+				}`,
 				code: 'SKYVODKA750',
 				list_price: 24.99,
 				quantity: 18,
@@ -84,7 +158,9 @@ db.once('open', async () => {
 			},
 			{
 				name: 'Absolut Vodka',
-				image: 'https://example.com/absolut-vodka.jpg',
+				image: `https://source.unsplash.com/collection/${
+					Math.floor(Math.random() * 10001) + 1
+				}`,
 				code: 'ABSVODKA750',
 				list_price: 29.99,
 				quantity: 14,
@@ -92,7 +168,9 @@ db.once('open', async () => {
 			},
 			{
 				name: 'Stolichnaya Vodka',
-				image: 'https://example.com/stolichnaya-vodka.jpg',
+				image: `https://source.unsplash.com/collection/${
+					Math.floor(Math.random() * 10001) + 1
+				}`,
 				code: 'STOVODKA750',
 				list_price: 27.99,
 				quantity: 16,
@@ -100,7 +178,9 @@ db.once('open', async () => {
 			},
 			{
 				name: "Tito's Handmade Vodka",
-				image: 'https://example.com/titos-vodka.jpg',
+				image: `https://source.unsplash.com/collection/${
+					Math.floor(Math.random() * 10001) + 1
+				}`,
 				code: 'TITVODKA750',
 				list_price: 22.99,
 				quantity: 22,
@@ -108,7 +188,9 @@ db.once('open', async () => {
 			},
 			{
 				name: 'Chopin Vodka',
-				image: 'https://example.com/chopin-vodka.jpg',
+				image: `https://source.unsplash.com/collection/${
+					Math.floor(Math.random() * 10001) + 1
+				}`,
 				code: 'CHPVODKA750',
 				list_price: 39.99,
 				quantity: 9,
@@ -119,7 +201,9 @@ db.once('open', async () => {
 		const tequilaProducts = await ProductModel.insertMany([
 			{
 				name: 'Don Julio 1942',
-				image: 'https://example.com/don-julio-1942.jpg',
+				image: `https://source.unsplash.com/collection/${
+					Math.floor(Math.random() * 10001) + 1
+				}`,
 				code: 'DJ1942',
 				list_price: 149.99,
 				quantity: 5,
@@ -127,7 +211,9 @@ db.once('open', async () => {
 			},
 			{
 				name: 'Clase Azul Reposado',
-				image: 'https://example.com/clase-azul-reposado.jpg',
+				image: `https://source.unsplash.com/collection/${
+					Math.floor(Math.random() * 10001) + 1
+				}`,
 				code: 'CLAREPO',
 				list_price: 99.99,
 				quantity: 10,
@@ -135,7 +221,9 @@ db.once('open', async () => {
 			},
 			{
 				name: 'Patron Silver',
-				image: 'https://example.com/patron-silver.jpg',
+				image: `https://source.unsplash.com/collection/${
+					Math.floor(Math.random() * 10001) + 1
+				}`,
 				code: 'PATSILVER',
 				list_price: 39.99,
 				quantity: 20,
@@ -143,7 +231,9 @@ db.once('open', async () => {
 			},
 			{
 				name: 'Casamigos Reposado',
-				image: 'https://example.com/casamigos-reposado.jpg',
+				image: `https://source.unsplash.com/collection/${
+					Math.floor(Math.random() * 10001) + 1
+				}`,
 				code: 'CASAREPO',
 				list_price: 49.99,
 				quantity: 15,
@@ -151,7 +241,9 @@ db.once('open', async () => {
 			},
 			{
 				name: 'Don Julio Blanco',
-				image: 'https://example.com/don-julio-blanco.jpg',
+				image: `https://source.unsplash.com/collection/${
+					Math.floor(Math.random() * 10001) + 1
+				}`,
 				code: 'DJBLANCO',
 				list_price: 39.99,
 				quantity: 20,
@@ -159,7 +251,9 @@ db.once('open', async () => {
 			},
 			{
 				name: 'Casa Noble Reposado',
-				image: 'https://example.com/casa-noble-reposado.jpg',
+				image: `https://source.unsplash.com/collection/${
+					Math.floor(Math.random() * 10001) + 1
+				}`,
 				code: 'CNREPO',
 				list_price: 49.99,
 				quantity: 15,
@@ -167,7 +261,9 @@ db.once('open', async () => {
 			},
 			{
 				name: 'Casa Noble Anejo',
-				image: 'https://example.com/casa-noble-anejo.jpg',
+				image: `https://source.unsplash.com/collection/${
+					Math.floor(Math.random() * 10001) + 1
+				}`,
 				code: 'CNANEJO',
 				list_price: 59.99,
 				quantity: 10,
@@ -175,7 +271,9 @@ db.once('open', async () => {
 			},
 			{
 				name: 'Don Julio Anejo',
-				image: 'https://example.com/don-julio-anejo.jpg',
+				image: `https://source.unsplash.com/collection/${
+					Math.floor(Math.random() * 10001) + 1
+				}`,
 				code: 'DJANEJO',
 				list_price: 49.99,
 				quantity: 15,
@@ -183,7 +281,9 @@ db.once('open', async () => {
 			},
 			{
 				name: 'Patron Anejo',
-				image: 'https://example.com/patron-anejo.jpg',
+				image: `https://source.unsplash.com/collection/${
+					Math.floor(Math.random() * 10001) + 1
+				}`,
 				code: 'PATANEJO',
 				list_price: 59.99,
 				quantity: 10,
@@ -191,7 +291,9 @@ db.once('open', async () => {
 			},
 			{
 				name: 'Patron Reposado',
-				image: 'https://example.com/patron-reposado.jpg',
+				image: `https://source.unsplash.com/collection/${
+					Math.floor(Math.random() * 10001) + 1
+				}`,
 				code: 'PATREPO',
 				list_price: 49.99,
 				quantity: 15,
@@ -205,7 +307,9 @@ db.once('open', async () => {
 				code: '1001',
 				list_price: 19.99,
 				quantity: 50,
-				image: 'https://example.com/images/bacardi-anejo-cuatro.jpg',
+				image: `https://source.unsplash.com/collection/${
+					Math.floor(Math.random() * 10001) + 1
+				}`,
 				categories: [rum._id],
 			},
 			{
@@ -213,8 +317,9 @@ db.once('open', async () => {
 				code: '1002',
 				list_price: 59.99,
 				quantity: 20,
-				image:
-					'https://example.com/images/matusalem-gran-reserva.jpg',
+				image: `https://source.unsplash.com/collection/${
+					Math.floor(Math.random() * 10001) + 1
+				}`,
 				categories: [rum._id],
 			},
 			{
@@ -222,8 +327,9 @@ db.once('open', async () => {
 				code: '1003',
 				list_price: 39.99,
 				quantity: 30,
-				image:
-					'https://example.com/images/diplomatico-reserva-exclusiva.jpg',
+				image: `https://source.unsplash.com/collection/${
+					Math.floor(Math.random() * 10001) + 1
+				}`,
 				categories: [rum._id],
 			},
 			{
@@ -231,7 +337,9 @@ db.once('open', async () => {
 				code: '1004',
 				list_price: 79.99,
 				quantity: 15,
-				image: 'https://example.com/images/zacapa-centenario-23.jpg',
+				image: `https://source.unsplash.com/collection/${
+					Math.floor(Math.random() * 10001) + 1
+				}`,
 				categories: [rum._id],
 			},
 			{
@@ -239,8 +347,9 @@ db.once('open', async () => {
 				code: '1005',
 				list_price: 24.99,
 				quantity: 45,
-				image:
-					'https://example.com/images/flor-de-cana-gran-reserva-7.jpg',
+				image: `https://source.unsplash.com/collection/${
+					Math.floor(Math.random() * 10001) + 1
+				}`,
 				categories: [rum._id],
 			},
 			{
@@ -248,7 +357,9 @@ db.once('open', async () => {
 				code: '1006',
 				list_price: 29.99,
 				quantity: 40,
-				image: 'https://example.com/images/havana-club-anejo-7.jpg',
+				image: `https://source.unsplash.com/collection/${
+					Math.floor(Math.random() * 10001) + 1
+				}`,
 				categories: [rum._id],
 			},
 			{
@@ -256,8 +367,9 @@ db.once('open', async () => {
 				code: '1007',
 				list_price: 34.99,
 				quantity: 25,
-				image:
-					'https://example.com/images/appleton-estate-signature-blend.jpg',
+				image: `https://source.unsplash.com/collection/${
+					Math.floor(Math.random() * 10001) + 1
+				}`,
 				categories: [rum._id],
 			},
 			{
@@ -265,7 +377,9 @@ db.once('open', async () => {
 				code: '1008',
 				list_price: 49.99,
 				quantity: 10,
-				image: 'https://example.com/images/brugal-xv.jpg',
+				image: `https://source.unsplash.com/collection/${
+					Math.floor(Math.random() * 10001) + 1
+				}`,
 				categories: [rum._id],
 			},
 			{
@@ -273,7 +387,9 @@ db.once('open', async () => {
 				code: '1009',
 				list_price: 69.99,
 				quantity: 5,
-				image: 'https://example.com/images/santa-teresa-1796.jpg',
+				image: `https://source.unsplash.com/collection/${
+					Math.floor(Math.random() * 10001) + 1
+				}`,
 				categories: [rum._id],
 			},
 			{
@@ -281,7 +397,9 @@ db.once('open', async () => {
 				code: '1010',
 				list_price: 44.99,
 				quantity: 35,
-				image: 'https://example.com/images/mount-gay-xo.jpg',
+				image: `https://source.unsplash.com/collection/${
+					Math.floor(Math.random() * 10001) + 1
+				}`,
 				categories: [rum._id],
 			},
 		]);
@@ -289,7 +407,9 @@ db.once('open', async () => {
 		const ginProducts = await ProductModel.insertMany([
 			{
 				name: "Ginebra Hendrick's",
-				image: 'https://via.placeholder.com/300',
+				image: `https://source.unsplash.com/collection/${
+					Math.floor(Math.random() * 10001) + 1
+				}`,
 				code: '001',
 				list_price: 70000,
 				quantity: 50,
@@ -297,7 +417,9 @@ db.once('open', async () => {
 			},
 			{
 				name: 'Ginebra Tanqueray',
-				image: 'https://via.placeholder.com/300',
+				image: `https://source.unsplash.com/collection/${
+					Math.floor(Math.random() * 10001) + 1
+				}`,
 				code: '002',
 				list_price: 65000,
 				quantity: 60,
@@ -305,7 +427,9 @@ db.once('open', async () => {
 			},
 			{
 				name: 'Ginebra Bombay Sapphire',
-				image: 'https://via.placeholder.com/300',
+				image: `https://source.unsplash.com/collection/${
+					Math.floor(Math.random() * 10001) + 1
+				}`,
 				code: '003',
 				list_price: 75000,
 				quantity: 40,
@@ -313,7 +437,9 @@ db.once('open', async () => {
 			},
 			{
 				name: 'Ginebra Beefeater',
-				image: 'https://via.placeholder.com/300',
+				image: `https://source.unsplash.com/collection/${
+					Math.floor(Math.random() * 10001) + 1
+				}`,
 				code: '004',
 				list_price: 60000,
 				quantity: 70,
@@ -321,7 +447,9 @@ db.once('open', async () => {
 			},
 			{
 				name: "Ginebra Gordon's",
-				image: 'https://via.placeholder.com/300',
+				image: `https://source.unsplash.com/collection/${
+					Math.floor(Math.random() * 10001) + 1
+				}`,
 				code: '005',
 				list_price: 55000,
 				quantity: 80,
@@ -329,7 +457,9 @@ db.once('open', async () => {
 			},
 			{
 				name: "Ginebra Martin Miller's",
-				image: 'https://via.placeholder.com/300',
+				image: `https://source.unsplash.com/collection/${
+					Math.floor(Math.random() * 10001) + 1
+				}`,
 				code: '006',
 				list_price: 80000,
 				quantity: 30,
@@ -337,7 +467,9 @@ db.once('open', async () => {
 			},
 			{
 				name: 'Ginebra Bulldog',
-				image: 'https://via.placeholder.com/300',
+				image: `https://source.unsplash.com/collection/${
+					Math.floor(Math.random() * 10001) + 1
+				}`,
 				code: '007',
 				list_price: 90000,
 				quantity: 20,
@@ -345,7 +477,9 @@ db.once('open', async () => {
 			},
 			{
 				name: 'Ginebra Citadelle',
-				image: 'https://via.placeholder.com/300',
+				image: `https://source.unsplash.com/collection/${
+					Math.floor(Math.random() * 10001) + 1
+				}`,
 				code: '008',
 				list_price: 85000,
 				quantity: 25,
@@ -353,7 +487,9 @@ db.once('open', async () => {
 			},
 			{
 				name: 'Ginebra Monkey 47',
-				image: 'https://via.placeholder.com/300',
+				image: `https://source.unsplash.com/collection/${
+					Math.floor(Math.random() * 10001) + 1
+				}`,
 				code: '009',
 				list_price: 100000,
 				quantity: 15,
@@ -361,7 +497,9 @@ db.once('open', async () => {
 			},
 			{
 				name: 'Ginebra Roku',
-				image: 'https://via.placeholder.com/300',
+				image: `https://source.unsplash.com/collection/${
+					Math.floor(Math.random() * 10001) + 1
+				}`,
 				code: '010',
 				list_price: 95000,
 				quantity: 18,
@@ -372,8 +510,9 @@ db.once('open', async () => {
 		const whiskeyProducts = await ProductModel.insertMany([
 			{
 				name: 'Johnnie Walker Blue Label',
-				image:
-					'https://example.com/images/johnnie-walker-blue-label.jpg',
+				image: `https://source.unsplash.com/collection/${
+					Math.floor(Math.random() * 10001) + 1
+				}`,
 				code: 'JWBL750',
 				list_price: 250.0,
 				quantity: 100,
@@ -381,8 +520,9 @@ db.once('open', async () => {
 			},
 			{
 				name: 'The Macallan 18 Year Old',
-				image:
-					'https://example.com/images/the-macallan-18-year-old.jpg',
+				image: `https://source.unsplash.com/collection/${
+					Math.floor(Math.random() * 10001) + 1
+				}`,
 				code: 'MAC18',
 				list_price: 300.0,
 				quantity: 50,
@@ -390,8 +530,9 @@ db.once('open', async () => {
 			},
 			{
 				name: 'Chivas Regal 18 Year Old',
-				image:
-					'https://example.com/images/chivas-regal-18-year-old.jpg',
+				image: `https://source.unsplash.com/collection/${
+					Math.floor(Math.random() * 10001) + 1
+				}`,
 				code: 'CHIV18',
 				list_price: 120.0,
 				quantity: 200,
@@ -399,8 +540,9 @@ db.once('open', async () => {
 			},
 			{
 				name: 'Glenfiddich 12 Year Old',
-				image:
-					'https://example.com/images/glenfiddich-12-year-old.jpg',
+				image: `https://source.unsplash.com/collection/${
+					Math.floor(Math.random() * 10001) + 1
+				}`,
 				code: 'GF12',
 				list_price: 50.0,
 				quantity: 300,
@@ -408,7 +550,9 @@ db.once('open', async () => {
 			},
 			{
 				name: 'Laphroaig 10 Year Old',
-				image: 'https://example.com/images/laphroaig-10-year-old.jpg',
+				image: `https://source.unsplash.com/collection/${
+					Math.floor(Math.random() * 10001) + 1
+				}`,
 				code: 'LAP10',
 				list_price: 60.0,
 				quantity: 150,
@@ -416,7 +560,9 @@ db.once('open', async () => {
 			},
 			{
 				name: 'Talisker 10 Year Old',
-				image: 'https://example.com/images/talisker-10-year-old.jpg',
+				image: `https://source.unsplash.com/collection/${
+					Math.floor(Math.random() * 10001) + 1
+				}`,
 				code: 'TAL10',
 				list_price: 70.0,
 				quantity: 120,
@@ -424,7 +570,9 @@ db.once('open', async () => {
 			},
 			{
 				name: 'Glenlivet 12 Year Old',
-				image: 'https://example.com/images/glenlivet-12-year-old.jpg',
+				image: `https://source.unsplash.com/collection/${
+					Math.floor(Math.random() * 10001) + 1
+				}`,
 				code: 'GL12',
 				list_price: 55.0,
 				quantity: 250,
@@ -432,7 +580,9 @@ db.once('open', async () => {
 			},
 			{
 				name: 'Lagavulin 16 Year Old',
-				image: 'https://example.com/images/lagavulin-16-year-old.jpg',
+				image: `https://source.unsplash.com/collection/${
+					Math.floor(Math.random() * 10001) + 1
+				}`,
 				code: 'LAG16',
 				list_price: 90.0,
 				quantity: 100,
@@ -440,7 +590,9 @@ db.once('open', async () => {
 			},
 			{
 				name: 'Bowmore 12 Year Old',
-				image: 'https://example.com/images/bowmore-12-year-old.jpg',
+				image: `https://source.unsplash.com/collection/${
+					Math.floor(Math.random() * 10001) + 1
+				}`,
 				code: 'BOW12',
 				list_price: 65.0,
 				quantity: 200,
@@ -448,8 +600,9 @@ db.once('open', async () => {
 			},
 			{
 				name: 'Highland Park 12 Year Old',
-				image:
-					'https://example.com/images/highland-park-12-year-old.jpg',
+				image: `https://source.unsplash.com/collection/${
+					Math.floor(Math.random() * 10001) + 1
+				}`,
 				code: 'HP12',
 				list_price: 75.0,
 				quantity: 180,
@@ -460,7 +613,9 @@ db.once('open', async () => {
 		const brandyProducts = await ProductModel.insertMany([
 			{
 				name: 'Brandy de Jerez Solera Reserva',
-				image: 'https://example.com/product1.jpg',
+				image: `https://source.unsplash.com/collection/${
+					Math.floor(Math.random() * 10001) + 1
+				}`,
 				code: 'B001',
 				list_price: 29.99,
 				quantity: 10,
@@ -468,7 +623,9 @@ db.once('open', async () => {
 			},
 			{
 				name: 'Brandy Gran Duque de Alba Oro',
-				image: 'https://example.com/product2.jpg',
+				image: `https://source.unsplash.com/collection/${
+					Math.floor(Math.random() * 10001) + 1
+				}`,
 				code: 'B002',
 				list_price: 99.99,
 				quantity: 5,
@@ -476,7 +633,9 @@ db.once('open', async () => {
 			},
 			{
 				name: 'Carlos I Imperial XO',
-				image: 'https://example.com/product3.jpg',
+				image: `https://source.unsplash.com/collection/${
+					Math.floor(Math.random() * 10001) + 1
+				}`,
 				code: 'B003',
 				list_price: 149.99,
 				quantity: 2,
@@ -484,7 +643,9 @@ db.once('open', async () => {
 			},
 			{
 				name: 'Cardenal Mendoza Carta Real',
-				image: 'https://example.com/product4.jpg',
+				image: `https://source.unsplash.com/collection/${
+					Math.floor(Math.random() * 10001) + 1
+				}`,
 				code: 'B004',
 				list_price: 59.99,
 				quantity: 7,
@@ -492,7 +653,9 @@ db.once('open', async () => {
 			},
 			{
 				name: 'Lepanto Brandy de Jerez Solera Gran Reserva',
-				image: 'https://example.com/product5.jpg',
+				image: `https://source.unsplash.com/collection/${
+					Math.floor(Math.random() * 10001) + 1
+				}`,
 				code: 'B005',
 				list_price: 89.99,
 				quantity: 3,
@@ -500,7 +663,9 @@ db.once('open', async () => {
 			},
 			{
 				name: 'Fundador Solera Reserva',
-				image: 'https://example.com/product6.jpg',
+				image: `https://source.unsplash.com/collection/${
+					Math.floor(Math.random() * 10001) + 1
+				}`,
 				code: 'B006',
 				list_price: 24.99,
 				quantity: 15,
@@ -508,7 +673,9 @@ db.once('open', async () => {
 			},
 			{
 				name: 'Terry Centenario Brandy Solera Reserva',
-				image: 'https://example.com/product7.jpg',
+				image: `https://source.unsplash.com/collection/${
+					Math.floor(Math.random() * 10001) + 1
+				}`,
 				code: 'B007',
 				list_price: 34.99,
 				quantity: 12,
@@ -516,7 +683,9 @@ db.once('open', async () => {
 			},
 			{
 				name: 'Lustau Solera Gran Reserva Brandy',
-				image: 'https://example.com/product8.jpg',
+				image: `https://source.unsplash.com/collection/${
+					Math.floor(Math.random() * 10001) + 1
+				}`,
 				code: 'B008',
 				list_price: 39.99,
 				quantity: 10,
@@ -524,7 +693,9 @@ db.once('open', async () => {
 			},
 			{
 				name: 'Osborne 103 Brandy de Jerez',
-				image: 'https://example.com/product9.jpg',
+				image: `https://source.unsplash.com/collection/${
+					Math.floor(Math.random() * 10001) + 1
+				}`,
 				code: 'B009',
 				list_price: 19.99,
 				quantity: 20,
@@ -532,7 +703,9 @@ db.once('open', async () => {
 			},
 			{
 				name: 'Soberano 5 Brandy Solera Reserva',
-				image: 'https://example.com/product10.jpg',
+				image: `https://source.unsplash.com/collection/${
+					Math.floor(Math.random() * 10001) + 1
+				}`,
 				code: 'B010',
 				list_price: 14.99,
 				quantity: 25,
@@ -546,7 +719,9 @@ db.once('open', async () => {
 				code: 'CER-001',
 				list_price: 2.99,
 				quantity: 100,
-				image: 'https://images.example.com/corona-extra.jpg',
+				image: `https://source.unsplash.com/collection/${
+					Math.floor(Math.random() * 10001) + 1
+				}`,
 				categories: [beer._id],
 			},
 			{
@@ -554,7 +729,9 @@ db.once('open', async () => {
 				code: 'CER-002',
 				list_price: 3.49,
 				quantity: 80,
-				image: 'https://images.example.com/heineken.jpg',
+				image: `https://source.unsplash.com/collection/${
+					Math.floor(Math.random() * 10001) + 1
+				}`,
 				categories: [beer._id],
 			},
 			{
@@ -562,7 +739,9 @@ db.once('open', async () => {
 				code: 'CER-003',
 				list_price: 4.99,
 				quantity: 60,
-				image: 'https://images.example.com/guinness-draught.jpg',
+				image: `https://source.unsplash.com/collection/${
+					Math.floor(Math.random() * 10001) + 1
+				}`,
 				categories: [beer._id],
 			},
 			{
@@ -570,7 +749,9 @@ db.once('open', async () => {
 				code: 'CER-004',
 				list_price: 3.99,
 				quantity: 70,
-				image: 'https://images.example.com/stella-artois.jpg',
+				image: `https://source.unsplash.com/collection/${
+					Math.floor(Math.random() * 10001) + 1
+				}`,
 				categories: [beer._id],
 			},
 			{
@@ -578,7 +759,9 @@ db.once('open', async () => {
 				code: 'CER-005',
 				list_price: 2.49,
 				quantity: 90,
-				image: 'https://images.example.com/modelo-especial.jpg',
+				image: `https://source.unsplash.com/collection/${
+					Math.floor(Math.random() * 10001) + 1
+				}`,
 				categories: [beer._id],
 			},
 			{
@@ -586,7 +769,9 @@ db.once('open', async () => {
 				code: 'CER-006',
 				list_price: 2.99,
 				quantity: 85,
-				image: 'https://images.example.com/budweiser.jpg',
+				image: `https://source.unsplash.com/collection/${
+					Math.floor(Math.random() * 10001) + 1
+				}`,
 				categories: [beer._id],
 			},
 			{
@@ -594,7 +779,9 @@ db.once('open', async () => {
 				code: 'CER-007',
 				list_price: 2.49,
 				quantity: 100,
-				image: 'https://images.example.com/miller-lite.jpg',
+				image: `https://source.unsplash.com/collection/${
+					Math.floor(Math.random() * 10001) + 1
+				}`,
 				categories: [beer._id],
 			},
 			{
@@ -602,7 +789,9 @@ db.once('open', async () => {
 				code: 'CER-008',
 				list_price: 3.29,
 				quantity: 75,
-				image: 'https://images.example.com/dos-equis-amber.jpg',
+				image: `https://source.unsplash.com/collection/${
+					Math.floor(Math.random() * 10001) + 1
+				}`,
 				categories: [beer._id],
 			},
 			{
@@ -610,7 +799,9 @@ db.once('open', async () => {
 				code: 'CER-009',
 				list_price: 4.49,
 				quantity: 50,
-				image: 'https://images.example.com/newcastle-brown-ale.jpg',
+				image: `https://source.unsplash.com/collection/${
+					Math.floor(Math.random() * 10001) + 1
+				}`,
 				categories: [beer._id],
 			},
 			{
@@ -618,8 +809,9 @@ db.once('open', async () => {
 				code: 'CER-010',
 				list_price: 4.99,
 				quantity: 60,
-				image:
-					'https://images.example.com/samuel-adams-boston-lager.jpg',
+				image: `https://source.unsplash.com/collection/${
+					Math.floor(Math.random() * 10001) + 1
+				}`,
 				categories: [beer._id],
 			},
 		]);
@@ -627,7 +819,9 @@ db.once('open', async () => {
 		const wineProducts = await ProductModel.insertMany([
 			{
 				name: 'Cabernet Sauvignon',
-				image: 'https://example.com/cabernet-sauvignon.jpg',
+				image: `https://source.unsplash.com/collection/${
+					Math.floor(Math.random() * 10001) + 1
+				}`,
 				code: 'CS-001',
 				list_price: 12.99,
 				quantity: 50,
@@ -635,7 +829,9 @@ db.once('open', async () => {
 			},
 			{
 				name: 'Merlot',
-				image: 'https://example.com/merlot.jpg',
+				image: `https://source.unsplash.com/collection/${
+					Math.floor(Math.random() * 10001) + 1
+				}`,
 				code: 'M-002',
 				list_price: 9.99,
 				quantity: 100,
@@ -643,7 +839,9 @@ db.once('open', async () => {
 			},
 			{
 				name: 'Chardonnay',
-				image: 'https://example.com/chardonnay.jpg',
+				image: `https://source.unsplash.com/collection/${
+					Math.floor(Math.random() * 10001) + 1
+				}`,
 				code: 'C-003',
 				list_price: 14.99,
 				quantity: 25,
@@ -651,7 +849,9 @@ db.once('open', async () => {
 			},
 			{
 				name: 'Pinot Noir',
-				image: 'https://example.com/pinot-noir.jpg',
+				image: `https://source.unsplash.com/collection/${
+					Math.floor(Math.random() * 10001) + 1
+				}`,
 				code: 'PN-004',
 				list_price: 17.99,
 				quantity: 75,
@@ -659,7 +859,9 @@ db.once('open', async () => {
 			},
 			{
 				name: 'Sauvignon Blanc',
-				image: 'https://example.com/sauvignon-blanc.jpg',
+				image: `https://source.unsplash.com/collection/${
+					Math.floor(Math.random() * 10001) + 1
+				}`,
 				code: 'SB-005',
 				list_price: 11.99,
 				quantity: 50,
@@ -667,7 +869,9 @@ db.once('open', async () => {
 			},
 			{
 				name: 'Malbec',
-				image: 'https://example.com/malbec.jpg',
+				image: `https://source.unsplash.com/collection/${
+					Math.floor(Math.random() * 10001) + 1
+				}`,
 				code: 'M-006',
 				list_price: 13.99,
 				quantity: 40,
@@ -675,7 +879,9 @@ db.once('open', async () => {
 			},
 			{
 				name: 'Syrah',
-				image: 'https://example.com/syrah.jpg',
+				image: `https://source.unsplash.com/collection/${
+					Math.floor(Math.random() * 10001) + 1
+				}`,
 				code: 'S-007',
 				list_price: 16.99,
 				quantity: 30,
@@ -683,7 +889,9 @@ db.once('open', async () => {
 			},
 			{
 				name: 'Zinfandel',
-				image: 'https://example.com/zinfandel.jpg',
+				image: `https://source.unsplash.com/collection/${
+					Math.floor(Math.random() * 10001) + 1
+				}`,
 				code: 'Z-008',
 				list_price: 19.99,
 				quantity: 20,
@@ -691,7 +899,9 @@ db.once('open', async () => {
 			},
 			{
 				name: 'Rosé',
-				image: 'https://example.com/rose.jpg',
+				image: `https://source.unsplash.com/collection/${
+					Math.floor(Math.random() * 10001) + 1
+				}`,
 				code: 'R-009',
 				list_price: 10.99,
 				quantity: 60,
@@ -699,7 +909,9 @@ db.once('open', async () => {
 			},
 			{
 				name: 'Barbera',
-				image: 'https://example.com/barbera.jpg',
+				image: `https://source.unsplash.com/collection/${
+					Math.floor(Math.random() * 10001) + 1
+				}`,
 				code: 'B-010',
 				list_price: 15.99,
 				quantity: 35,
@@ -710,7 +922,9 @@ db.once('open', async () => {
 		const champagneProducts = await ProductModel.insertMany([
 			{
 				name: 'Moët & Chandon Brut Imperial',
-				image: 'https://via.placeholder.com/150',
+				image: `https://source.unsplash.com/collection/${
+					Math.floor(Math.random() * 10001) + 1
+				}`,
 				code: 'MC-BI-001',
 				list_price: 999.99,
 				quantity: 50,
@@ -718,7 +932,9 @@ db.once('open', async () => {
 			},
 			{
 				name: 'Veuve Clicquot Ponsardin',
-				image: 'https://via.placeholder.com/150',
+				image: `https://source.unsplash.com/collection/${
+					Math.floor(Math.random() * 10001) + 1
+				}`,
 				code: 'VCP-001',
 				list_price: 899.99,
 				quantity: 100,
@@ -726,7 +942,9 @@ db.once('open', async () => {
 			},
 			{
 				name: 'Dom Pérignon Vintage 2010',
-				image: 'https://via.placeholder.com/150',
+				image: `https://source.unsplash.com/collection/${
+					Math.floor(Math.random() * 10001) + 1
+				}`,
 				code: 'DP-2010-001',
 				list_price: 1999.99,
 				quantity: 20,
@@ -734,7 +952,9 @@ db.once('open', async () => {
 			},
 			{
 				name: 'Krug Grande Cuvée',
-				image: 'https://via.placeholder.com/150',
+				image: `https://source.unsplash.com/collection/${
+					Math.floor(Math.random() * 10001) + 1
+				}`,
 				code: 'KGC-001',
 				list_price: 1599.99,
 				quantity: 30,
@@ -742,7 +962,9 @@ db.once('open', async () => {
 			},
 			{
 				name: 'Bollinger La Grande Année',
-				image: 'https://via.placeholder.com/150',
+				image: `https://source.unsplash.com/collection/${
+					Math.floor(Math.random() * 10001) + 1
+				}`,
 				code: 'BLGA-001',
 				list_price: 1299.99,
 				quantity: 40,
@@ -750,7 +972,9 @@ db.once('open', async () => {
 			},
 			{
 				name: 'Ruinart Blanc de Blancs',
-				image: 'https://via.placeholder.com/150',
+				image: `https://source.unsplash.com/collection/${
+					Math.floor(Math.random() * 10001) + 1
+				}`,
 				code: 'R-BDB-001',
 				list_price: 899.99,
 				quantity: 50,
@@ -758,7 +982,9 @@ db.once('open', async () => {
 			},
 			{
 				name: 'Perrier-Jouët Belle Epoque',
-				image: 'https://via.placeholder.com/150',
+				image: `https://source.unsplash.com/collection/${
+					Math.floor(Math.random() * 10001) + 1
+				}`,
 				code: 'PJ-BE-001',
 				list_price: 1499.99,
 				quantity: 20,
@@ -766,7 +992,9 @@ db.once('open', async () => {
 			},
 			{
 				name: 'Taittinger Comtes de Champagne Blanc de Blancs',
-				image: 'https://via.placeholder.com/150',
+				image: `https://source.unsplash.com/collection/${
+					Math.floor(Math.random() * 10001) + 1
+				}`,
 				code: 'T-CCBDB-001',
 				list_price: 1699.99,
 				quantity: 25,
@@ -774,7 +1002,9 @@ db.once('open', async () => {
 			},
 			{
 				name: 'Louis Roederer Cristal',
-				image: 'https://via.placeholder.com/150',
+				image: `https://source.unsplash.com/collection/${
+					Math.floor(Math.random() * 10001) + 1
+				}`,
 				code: 'LR-C-001',
 				list_price: 2199.99,
 				quantity: 15,
@@ -782,7 +1012,9 @@ db.once('open', async () => {
 			},
 			{
 				name: 'Armand de Brignac Blanc de Blancs',
-				image: 'https://via.placeholder.com/150',
+				image: `https://source.unsplash.com/collection/${
+					Math.floor(Math.random() * 10001) + 1
+				}`,
 				code: 'ADB-BDB-001',
 				list_price: 2499.99,
 				quantity: 10,

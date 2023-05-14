@@ -5,26 +5,24 @@ import {
 	create,
 	update,
 	remove,
-} from '../services/user.service';
+} from '../services/warehouse.service';
 import {
-	GetUserInput,
-	CreateUserInput,
-	UpdateUserInput,
-	DeleteUserInput,
-} from '../schemas/user.schema';
+	GetWarehouseInput,
+	CreateWarehouseInput,
+	UpdateWarehouseInput,
+	DeleteWarehouseInput,
+} from '../schemas/warehouse.schema';
 import { logger } from '../utils';
 
 export const handlerFind = async (_req: Request, res: Response) => {
 	try {
-		const users = await find(
-			{},
-		);
+		const warehouses = await find({});
 		// return res.status(200).json({
-		// 	success: true,
-		// 	data: users,
-		// 	message: 'Users found successfully',
+		//   success: true,
+		//   data: categories,
+		//   message: 'Categories found successfully',
 		// });
-		return res.status(200).json(users)
+		return res.status(200).json(warehouses);
 	} catch (error: any) {
 		logger.error(error);
 		return res.status(500).json({
@@ -35,26 +33,22 @@ export const handlerFind = async (_req: Request, res: Response) => {
 };
 
 export const handlerFindById = async (
-	req: Request<GetUserInput['params']>,
+	req: Request<GetWarehouseInput['params']>,
 	res: Response,
 ) => {
+	const { id } = req.params;
 	try {
-		const { id } = req.params;
-		const user = await findOne(
-			{
-				_id: id,
-			},
-		);
-		if (!user) {
+		const warehouse = await findOne({ _id: id });
+		if (!warehouse) {
 			return res.status(404).json({
 				success: false,
-				message: 'User not found',
+				message: 'Warehouse not found',
 			});
 		}
 		return res.status(200).json({
 			success: true,
-			date: user,
-			message: 'User found successfully',
+			data: warehouse,
+			message: 'Warehouse found successfully',
 		});
 	} catch (error: any) {
 		logger.error(error);
@@ -65,16 +59,16 @@ export const handlerFindById = async (
 	}
 };
 
-export const handleCreate = async (
-	req: Request<{}, {}, CreateUserInput['body']>,
+export const handlerCreate = async (
+	req: Request<{}, {}, CreateWarehouseInput['body']>,
 	res: Response,
 ) => {
 	try {
-		const user = await create(req.body);
+		const warehouse = await create(req.body);
 		return res.status(201).json({
 			success: true,
-			data: user,
-			message: 'User created successfully',
+			data: warehouse,
+			message: 'Warehouse created successfully',
 		});
 	} catch (error: any) {
 		logger.error(error);
@@ -85,32 +79,32 @@ export const handleCreate = async (
 	}
 };
 
-export const handleUpdate = async (
+export const handlerUpdate = async (
 	req: Request<
-		UpdateUserInput['params'],
+		UpdateWarehouseInput['params'],
 		{},
-		UpdateUserInput['body']
+		UpdateWarehouseInput['body']
 	>,
 	res: Response,
 ) => {
+	const { id } = req.params;
 	try {
-		const { id } = req.params;
-		const user = await update(
+		const warehouse = await update(
 			{
 				_id: id,
 			},
 			req.body,
 		);
-		if (!user) {
+		if (!warehouse) {
 			return res.status(404).json({
 				success: false,
-				message: 'User not found',
+				message: 'Warehouse not found',
 			});
 		}
 		return res.status(200).json({
 			success: true,
-			data: user,
-			message: 'User updated successfully',
+			data: warehouse,
+			message: 'Warehouse updated successfully',
 		});
 	} catch (error: any) {
 		logger.error(error);
@@ -121,24 +115,25 @@ export const handleUpdate = async (
 	}
 };
 
-export const handleDelete = async (
-	req: Request<DeleteUserInput['params']>,
+export const handlerDelete = async (
+	req: Request<DeleteWarehouseInput['params']>,
 	res: Response,
 ) => {
+	const { id } = req.params;
 	try {
-		const { id } = req.params;
-		const user = await remove({
+		const warehouse = await remove({
 			_id: id,
 		});
-		if (!user) {
+		if (!warehouse) {
 			return res.status(404).json({
 				success: false,
-				message: 'User not found',
+				message: 'Warehouse not found',
 			});
 		}
 		return res.status(200).json({
 			success: true,
-			message: 'User deleted successfully',
+			data: warehouse,
+			message: 'Warehouse deleted successfully',
 		});
 	} catch (error: any) {
 		logger.error(error);

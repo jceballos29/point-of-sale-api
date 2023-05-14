@@ -5,26 +5,25 @@ import {
 	create,
 	update,
 	remove,
-} from '../services/user.service';
+} from '../services/device.service';
 import {
-	GetUserInput,
-	CreateUserInput,
-	UpdateUserInput,
-	DeleteUserInput,
-} from '../schemas/user.schema';
+	GetDeviceInput,
+	CreateDeviceInput,
+	UpdateDeviceInput,
+	DeleteDeviceInput,
+} from '../schemas/device.schema';
+
 import { logger } from '../utils';
 
 export const handlerFind = async (_req: Request, res: Response) => {
 	try {
-		const users = await find(
-			{},
-		);
+		const devices = await find({});
 		// return res.status(200).json({
-		// 	success: true,
-		// 	data: users,
-		// 	message: 'Users found successfully',
+		//   success: true,
+		//   data: categories,
+		//   message: 'Categories found successfully',
 		// });
-		return res.status(200).json(users)
+		return res.status(200).json(devices);
 	} catch (error: any) {
 		logger.error(error);
 		return res.status(500).json({
@@ -35,26 +34,22 @@ export const handlerFind = async (_req: Request, res: Response) => {
 };
 
 export const handlerFindById = async (
-	req: Request<GetUserInput['params']>,
+	req: Request<GetDeviceInput['params']>,
 	res: Response,
 ) => {
+	const { id } = req.params;
 	try {
-		const { id } = req.params;
-		const user = await findOne(
-			{
-				_id: id,
-			},
-		);
-		if (!user) {
+		const device = await findOne({ _id: id });
+		if (!device) {
 			return res.status(404).json({
 				success: false,
-				message: 'User not found',
+				message: 'Device not found',
 			});
 		}
 		return res.status(200).json({
 			success: true,
-			date: user,
-			message: 'User found successfully',
+			data: device,
+			message: 'Device found successfully',
 		});
 	} catch (error: any) {
 		logger.error(error);
@@ -65,16 +60,16 @@ export const handlerFindById = async (
 	}
 };
 
-export const handleCreate = async (
-	req: Request<{}, {}, CreateUserInput['body']>,
+export const handlerCreate = async (
+	req: Request<{}, any, CreateDeviceInput['body']>,
 	res: Response,
 ) => {
 	try {
-		const user = await create(req.body);
+		const device = await create(req.body);
 		return res.status(201).json({
 			success: true,
-			data: user,
-			message: 'User created successfully',
+			data: device,
+			message: 'Device created successfully',
 		});
 	} catch (error: any) {
 		logger.error(error);
@@ -85,32 +80,28 @@ export const handleCreate = async (
 	}
 };
 
-export const handleUpdate = async (
+export const handlerUpdate = async (
 	req: Request<
-		UpdateUserInput['params'],
-		{},
-		UpdateUserInput['body']
+		UpdateDeviceInput['params'],
+		any,
+		UpdateDeviceInput['body']
 	>,
 	res: Response,
 ) => {
+	const { id } = req.params;
 	try {
-		const { id } = req.params;
-		const user = await update(
-			{
-				_id: id,
-			},
-			req.body,
-		);
-		if (!user) {
+		const device = await update({ _id: id }, req.body);
+
+		if (!device) {
 			return res.status(404).json({
 				success: false,
-				message: 'User not found',
+				message: 'Device not found',
 			});
 		}
 		return res.status(200).json({
 			success: true,
-			data: user,
-			message: 'User updated successfully',
+			data: device,
+			message: 'Device updated successfully',
 		});
 	} catch (error: any) {
 		logger.error(error);
@@ -121,24 +112,23 @@ export const handleUpdate = async (
 	}
 };
 
-export const handleDelete = async (
-	req: Request<DeleteUserInput['params']>,
+export const handlerDelete = async (
+	req: Request<DeleteDeviceInput['params']>,
 	res: Response,
 ) => {
+	const { id } = req.params;
 	try {
-		const { id } = req.params;
-		const user = await remove({
-			_id: id,
-		});
-		if (!user) {
+		const device = await remove({ _id: id });
+		if (!device) {
 			return res.status(404).json({
 				success: false,
-				message: 'User not found',
+				message: 'Device not found',
 			});
 		}
 		return res.status(200).json({
 			success: true,
-			message: 'User deleted successfully',
+			data: device,
+			message: 'Device deleted successfully',
 		});
 	} catch (error: any) {
 		logger.error(error);

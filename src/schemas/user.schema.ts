@@ -22,9 +22,12 @@ export const createUserSchema = object({
 		password: string({
 			required_error: 'Password is required',
 		}).min(6, 'Password too short'),
-		groups: array(
+		role: string({
+			required_error: 'Role is required',
+		}),
+		devices: array(
 			string({
-				required_error: 'Group is required',
+				required_error: 'Device is required',
 			}),
 		),
 	}),
@@ -53,10 +56,15 @@ export const updateUserSchema = object({
 				required_error: 'Password is required',
 			}).min(6, 'Password too short'),
 		),
-		groups: optional(
+		role: optional(
+			string({
+				required_error: 'Role is required',
+			}),
+		),
+		devices: optional(
 			array(
 				string({
-					required_error: 'Group is required',
+					required_error: 'Device is required',
 				}),
 			),
 		),

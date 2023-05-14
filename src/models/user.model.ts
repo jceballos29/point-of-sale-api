@@ -1,13 +1,14 @@
 import { Schema, model, Document } from 'mongoose';
 import bcrypt from 'bcrypt';
-import { GroupDocument } from './groups.model';
+import { DeviceDocument } from './device.model';
 
 export interface User {
 	name: string;
 	username: string;
 	password: string;
 	email: string;
-	groups: GroupDocument['_id'][];
+	role: string;
+	devices: DeviceDocument['_id'][]
 }
 
 export interface UserDocument extends User, Document {
@@ -37,7 +38,6 @@ const userSchema = new Schema<UserDocument>(
 			trim: true,
 			minlength: 6,
 			maxlength: 20,
-			select: false
 		},
 		email: {
 			type: String,
@@ -45,13 +45,17 @@ const userSchema = new Schema<UserDocument>(
 			required: true,
 			trim: true,
 		},
-		groups: [
+		role: {
+			type: String,
+			enum: ['admin', 'user'],
+			default: 'user',
+		},
+		devices: [
 			{
 				type: Schema.Types.ObjectId,
-				ref: 'Group',
-				required: true,
-			},
-		],
+				ref: 'Device',
+			}
+		]
 	},
 	{
 		timestamps: true,
@@ -60,7 +64,7 @@ const userSchema = new Schema<UserDocument>(
 );
 
 userSchema.pre('save', async function (next) {
-	const user = this as UserDocument;
+	const user = this as unknown as UserDocument;
 	if (!user.isModified('password')) return next();
 	user.password = await bcrypt.hash(user.password, 10);
 	return next();

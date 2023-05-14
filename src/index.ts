@@ -7,6 +7,7 @@ import { logger, stream } from './utils';
 import { env, database } from './config'
 
 import router from './routes'
+import { deserialize } from './middleware';
 
 const app: Application = express();
 
@@ -20,12 +21,13 @@ app.use(helmet());
 app.use(morgan('dev', { stream }));
 app.use(helmet());
 
+app.use(deserialize)
 
 app.get('/', (req, res) => {
   res.send('Hello World!');
 })
 
-app.use('/api', router);
+app.use('/:database', router);
 
 const PORT = env.port;
 
