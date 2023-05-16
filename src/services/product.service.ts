@@ -1,5 +1,5 @@
 import { FilterQuery, QueryOptions } from 'mongoose';
-import ProductModel, { Product, ProductDocument } from '../models/product.model';
+import ProductModel, { ProductDocument } from '../models/product.model';
 
 export const find = async (
   query: FilterQuery<ProductDocument>,
@@ -15,21 +15,12 @@ export const findOne = async (
   return await ProductModel.findOne(query, null, options);
 }
 
-export const create = async (product: Product) => {
-  return ProductModel.create(product);
-}
+export const create = async () => {}
 
 export const update = async (
   query: FilterQuery<ProductDocument>,
-  update: Partial<ProductDocument>,
+  data: Partial<ProductDocument>,
   options: QueryOptions = { lean: true, new: true },
 ) => {
-  return await ProductModel.updateOne(query, update, options);
-}
-
-export const remove = async (
-  query: FilterQuery<ProductDocument>,
-  options: QueryOptions = { lean: true },
-) => {
-  return await ProductModel.deleteOne(query, options);
+  return await ProductModel.updateOne(query, data, options);
 }

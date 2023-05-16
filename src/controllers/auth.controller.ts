@@ -28,7 +28,7 @@ export const login = async (
 		}
 
 		const token = generateToken({
-			user: user._id,
+			_id: user._id,
 			role: user.role,
 		});
 
@@ -45,7 +45,7 @@ export const me = async (req: Request, res: Response) => {
 	try {
 		const { user: payload } = res.locals;
 
-		const user = await findUser({ _id: payload.user },{
+		const user = await findUser({ _id: payload._id },{
       select: '-password',
       populate: 'devices'
     });
