@@ -10,7 +10,9 @@ export const login = async (
 	try {
 		const { username, password } = req.body;
 
-		const user = await findUser({ username });
+		const user = await findUser({ username },{
+      populate: 'devices'
+    });
 		if (!user) {
 			return res.status(401).json({
 				success: false,
@@ -34,6 +36,7 @@ export const login = async (
 
 		return res.status(200).json({
 			token,
+			user
 		});
 	} catch (error: any) {
 		logger.error(error);
